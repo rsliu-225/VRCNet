@@ -16,6 +16,7 @@ epoch_interval_to_val: 1
 varying_constant: 0.01, 0.1, 0.5, 1
 varying_constant_epochs: 5, 15, 30
 
+
 lr: 0.0001
 lr_decay: True
 lr_decay_interval: 40
