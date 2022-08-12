@@ -101,6 +101,12 @@ class Model(nn.Module):
             total_train_loss = loss1.mean() + loss2.mean() * alpha
             return out2, loss2, total_train_loss
         else:
-            emd = calc_emd(out2, gt, eps=0.004, iterations=3000)
-            cd_p, cd_t, f1 = calc_cd(out2, gt, calc_f1=True)
+            if gt is not None:
+                emd = calc_emd(out2, gt, eps=0.004, iterations=3000)
+                cd_p, cd_t, f1 = calc_cd(out2, gt, calc_f1=True)
+            else:
+                if not is_training:
+                    emd = cd_p = cd_t = f1 = 0
+                else:
+                    raise Exception("Ground truth must be provided for the training")
             return {'out1': out1, 'out2': out2, 'emd': emd, 'cd_p': cd_p, 'cd_t': cd_t, 'f1': f1}

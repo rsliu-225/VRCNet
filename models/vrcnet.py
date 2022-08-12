@@ -508,6 +508,12 @@ class Model(nn.Module):
             total_train_loss += (dl_rec.mean() + dl_g.mean()) * 20
             return fine, loss4, total_train_loss
         else:
-            emd = calc_emd(fine, gt, eps=0.004, iterations=3000)
-            cd_p, cd_t, f1 = calc_cd(fine, gt, calc_f1=True)
+            if gt is not None:
+                emd = calc_emd(fine, gt, eps=0.004, iterations=3000)
+                cd_p, cd_t, f1 = calc_cd(fine, gt, calc_f1=True)
+            else:
+                if not is_training:
+                    emd = cd_p = cd_t = f1 = 0
+                else:
+                    raise Exception("Ground truth must be provided for the training")
             return {'out1': coarse_raw, 'out2': fine, 'emd': emd, 'cd_p': cd_p, 'cd_t': cd_t, 'f1': f1}
